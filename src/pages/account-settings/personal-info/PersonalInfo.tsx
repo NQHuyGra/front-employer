@@ -42,7 +42,7 @@ export default function PersonalInfo() {
                         placeholder="example@gmail.com"
                         disabled
                         className={cn(
-                            'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-600',
+                            'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
                         )}
                     />
                 </div>
@@ -60,7 +60,7 @@ export default function PersonalInfo() {
                             autoComplete="name"
                             placeholder="Nhập họ và tên"
                             className={cn(
-                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-600',
+                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
                                 errors?.fullName && 'ring-red-500'
                             )}
                             {...register("fullName", { required: 'Vui lòng nhập họ và tên' })}
@@ -74,7 +74,7 @@ export default function PersonalInfo() {
                         >Giới tính</label>
                         <select
                             id="gender"
-                            className="px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-600"
+                            className="px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600"
                             {...register('gender')}
                         >
                             <option value="MALE">Nam</option>
@@ -94,7 +94,7 @@ export default function PersonalInfo() {
                             autoComplete="tel"
                             placeholder="Nhập số điện thoại"
                             className={cn(
-                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-600',
+                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
                                 errors?.phoneNumber && 'ring-red-500'
                             )}
                             {...register("phoneNumber", { required: 'Vui lòng nhập số điện thoại' })}

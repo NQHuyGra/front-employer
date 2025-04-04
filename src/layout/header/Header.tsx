@@ -42,7 +42,7 @@ export default function Header() {
                 </Popover>
                 <Popover content={(
                     <div className="flex flex-col">
-                        <Link to="/help" className="!text-black flex items-center gap-2 p-2 transition hover:bg-gray-200 rounded-md text-base">
+                        <Link to="/help" className="text-black! flex items-center gap-2 p-2 transition hover:bg-gray-200 rounded-md text-base">
                             <IoHelpCircleOutline />
                             <span>Hỗ trợ</span>
                         </Link>

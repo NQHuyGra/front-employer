@@ -40,7 +40,7 @@ export default function ChangePassword() {
                         autoComplete="current-password"
                         placeholder="Nhập mật khẩu hiện tại"
                         className={cn(
-                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-500',
+                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-500',
                             errors?.currentPassword && 'ring-red-500'
                         )}
                         {...register("currentPassword", { required: true })}
@@ -54,7 +54,7 @@ export default function ChangePassword() {
                         autoComplete="new-password"
                         placeholder="Nhập mật khẩu mới"
                         className={cn(
-                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-500',
+                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-500',
                             errors?.newPassword && 'ring-red-500'
                         )}
                         {...register("newPassword", { required: true })}
@@ -68,7 +68,7 @@ export default function ChangePassword() {
                         autoComplete="new-password"
                         placeholder="Nhập lại mật khẩu mới"
                         className={cn(
-                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-none focus:ring-sky-500',
+                            'px-3 py-1 w-96 max-w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-500',
                             errors?.comfirmPassword && 'ring-red-500'
                         )}
                         {...register("comfirmPassword", { required: true })}
