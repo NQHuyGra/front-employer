@@ -3,7 +3,7 @@ import { CompanyWithoutInfoRequest } from "../../../../shared/types/company"
 import LogoUpload from "./LogoUpload"
 import BusinessTypeOptions from "./BusinessTypeOptions"
 import { Input, Select } from "antd"
-import { COMPANY_FIELDS } from "../../../../shared/constants/companyFields"
+import { COMPANY_FIELDS } from "../../../../shared/constants/companyField"
 import TextEditor from "../../../../shared/components/quill/QuillTextEditor"
 import placeholderImg from "../../../../assets/images/placeholder.webp"
 
@@ -124,7 +124,7 @@ export default function AddCompany() {
                             value={companyData.fields}
                             className="w-full"
                             onChange={(e) => handleChange('fields', e, true)}
-                            placeholder="Chọn quy mô công ty"
+                            placeholder="Chọn lĩnh vực hoạt động"
                             options={COMPANY_FIELDS.map(item => (
                                 {
                                     value: item.id,
