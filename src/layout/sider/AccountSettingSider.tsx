@@ -22,12 +22,12 @@ export default function AccountSettingSider() {
             href: '/account/settings/password',
             active: pathname === '/account/settings/password'
         },
-        {
-            label: 'Giấy phép đăng ký doanh nghiệp',
-            icon: IoReaderOutline,
-            href: '/account/settings/company-license',
-            active: pathname === '/account/settings/company-license'
-        },
+        // {
+        //     label: 'Giấy phép đăng ký doanh nghiệp',
+        //     icon: IoReaderOutline,
+        //     href: '/account/settings/company-license',
+        //     active: pathname === '/account/settings/company-license'
+        // },
         {
             label: 'Thông tin công ty',
             icon: FaRegBuilding,

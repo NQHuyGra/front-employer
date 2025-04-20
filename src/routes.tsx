@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { lazy } from "react";
 const Layout = lazy(() => import("./layout/Layout.js"))
 const AuthLayout = lazy(() => import("./layout/AuthLayout.js"))
@@ -14,8 +14,9 @@ const Login = lazy(() => import("./pages/auth/login/Login.js"))
 const Register = lazy(() => import("./pages/auth/register/Register.js"))
 const CreatedJobs = lazy(() => import("./pages/job/created-jobs/CreatedJobs.js"))
 const Services = lazy(() => import("./pages/services/Services.js"))
-const CVsManagement = lazy(() => import("./pages/cv-management/CVSManagement.js"))
+const ApplicantFiles = lazy(() => import("./pages/applicant-files/ApplicantFiles.js"))
 const RecruitmentCampaigns = lazy(() => import("./pages/recruitment-campaigns/RecruitmentCampaigns.js"))
+const UpdateJob = lazy(() => import("./pages/job/update-job/UpdateJob.js"))
 // import withProtected from "./shared/components/secure/withProtected";
 
 // const ProtectedLayout = withProtected(Layout)
@@ -48,14 +49,19 @@ export const router = createBrowserRouter([
                 element: <CreatedJobs/>,
             },
             {
+                id: 'update-job',
+                path: 'update-job/:jobId',
+                element: <UpdateJob/>,
+            },
+            {
                 id: 'recruitment-campaigns',
                 path: 'recruitment-campaigns',
                 element: <RecruitmentCampaigns/>,
             },
             {
-                id: "cvs-management",
-                path: "cvs-management",
-                element: <CVsManagement/>,
+                id: "applicants",
+                path: "applicants",
+                element: <ApplicantFiles/>,
             },
             {
                 id: 'help',

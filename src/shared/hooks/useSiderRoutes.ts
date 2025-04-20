@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { IconType } from "react-icons";
 import { BsBriefcase, BsFeather, BsFilePerson } from "react-icons/bs";
-import { IoDiamondOutline, IoFileTrayFullOutline, IoGridOutline, IoHelpCircleOutline, IoLogOutOutline, IoPencilOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoFileTrayFullOutline, IoGridOutline, IoHelpCircleOutline, IoLogOutOutline, IoPencilOutline, IoSettingsOutline } from "react-icons/io5";
 import { useLocation } from "react-router-dom";
-import { FaRegLightbulb } from "react-icons/fa6";
 import useLogoutModal from "./useLogoutModal";
 
 export type Route = {
@@ -30,18 +29,18 @@ export default function useSiderRoutes() {
             icon: IoGridOutline,
             active: pathname === '/'
         },
-        {
-            label: 'Insights',
-            href: '/insights',
-            icon: FaRegLightbulb,
-            active: pathname === '/insights'
-        },
-        {
-            label: 'Rewards',
-            href: '/rewards',
-            icon: IoDiamondOutline,
-            active: pathname === '/rewards'
-        },
+        // {
+        //     label: 'Insights',
+        //     href: '/insights',
+        //     icon: FaRegLightbulb,
+        //     active: pathname === '/insights'
+        // },
+        // {
+        //     label: 'Rewards',
+        //     href: '/rewards',
+        //     icon: IoDiamondOutline,
+        //     active: pathname === '/rewards'
+        // },
         {
             label: 'Dịch vụ của tôi',
             href: '/services',
@@ -70,10 +69,10 @@ export default function useSiderRoutes() {
             active: pathname === '/create-job'
         },
         {
-            label: 'Quản lý CV',
-            href: '/cvs-management',
+            label: 'Quản lý hồ sơ ứng tuyển',
+            href: '/applicants',
             icon: BsFilePerson,
-            active: pathname === '/cvs-management'
+            active: pathname === '/applicant'
         },
         {
             divider: true

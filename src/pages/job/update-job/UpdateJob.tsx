@@ -1,25 +1,24 @@
-import { DatePicker, Form, Input, Select } from "antd";
-import Card from "../../../shared/components/cards/Card";
-import { JOB_FIELDS } from "../../../shared/constants/jobField";
-import { RANKS } from "../../../shared/constants/rank";
-import { EXP } from "../../../shared/constants/exp";
-import QuillTextEditor from "../../../shared/components/quill/QuillTextEditor";
-import { FORM_OF_WORK } from "../../../shared/constants/formOfWork";
-import { CITIES } from "../../../shared/constants/city";
-import { Link } from "react-router-dom";
-import { Job } from "../../../shared/types/job";
+import { DatePicker, Form, Input, Select } from "antd"
+import Card from "../../../shared/components/cards/Card"
+import { JOB_FIELDS } from "../../../shared/constants/jobField"
+import { RANKS } from "../../../shared/constants/rank"
+import { EXP } from "../../../shared/constants/exp"
+import { FORM_OF_WORK } from "../../../shared/constants/formOfWork"
+import { CITIES } from "../../../shared/constants/city"
+import QuillTextEditor from "../../../shared/components/quill/QuillTextEditor"
+import { Link, useParams } from "react-router-dom"
 
-export default function CreateJob() {
+const UpdateJob = () => {
 
+    const { jobId } = useParams()
 
-    const onSubmit = (values: Job) => {
+    const onSubmit = (values: any) => {
         console.log(values)
     }
 
     return (
         <Card className="m-4">
-            <h1 className="font-semibold text-gray-800 text-3xl">Tạo tin tuyển dụng mới</h1>
-            <p className="text-gray-800 mb-5">Tìm kiếm ứng viên tiềm năng.</p>
+            <h1 className="font-semibold text-gray-800 text-3xl mb-5">Chỉnh sửa tin tuyển dụng</h1>
             <Form
                 layout="vertical"
                 className="w-full"
@@ -298,10 +297,12 @@ export default function CreateJob() {
                     />
                 </Form.Item>
                 <div className="w-full flex justify-end gap-3">
-                    <Link to="/" className="!bg-gray-200 !text-gray-800 font-medium px-5 py-1 rounded-md hover:!bg-gray-300 !transition-all">Hủy</Link>
-                    <button className="bg-primary text-white font-medium px-5 py-1 rounded-md">Hoàn tất</button>
+                    <Link to="/jobs" className="!bg-gray-200 !text-gray-800 font-medium px-5 py-1 rounded-md hover:!bg-gray-300 !transition-all">Hủy</Link>
+                    <button className="bg-primary text-white font-medium px-5 py-1 rounded-md">Lưu thay đổi</button>
                 </div>
             </Form>
         </Card>
     )
 }
+
+export default UpdateJob
