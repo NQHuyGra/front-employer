@@ -11,9 +11,11 @@ export default function PersonalInfo() {
 
     const handleReset = () => {
         reset({
+            companyName: '',
             fullName: '',
             gender: 'MALE',
-            phoneNumber: ''
+            phoneNumber: '',
+            address: ''
         })
     }
 
@@ -33,21 +35,41 @@ export default function PersonalInfo() {
                     <label htmlFor="avatar" className="block text-md mb-2 font-medium text-gray-600">Avatar</label>
                     <AvatarUpload src={avatar ?? placeholder} onChange={setAvatar}/>
                 </div>
-                <div className="relative w-full md:w-2/5 grow">
-                    <label htmlFor="email" className="block text-md mb-2 font-medium text-gray-600">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        autoComplete="email"
-                        placeholder="example@gmail.com"
-                        disabled
-                        className={cn(
-                            'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
-                        )}
-                    />
-                </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex mb-5 flex-col md:flex-row gap-5">
+                    <div className="relative w-full md:w-2/5 grow">
+                        <label htmlFor="email" className="block text-md mb-2 font-medium text-gray-600">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="example@gmail.com"
+                            disabled
+                            className={cn(
+                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
+                            )}
+                        />
+                    </div>
+                    <div className="relative w-full md:w-2/5 grow">
+                        <label
+                            htmlFor="companyName"
+                            className="block text-md mb-2 font-medium text-gray-600"
+                        >Tên công ty</label>
+                        <input
+                            id="companyName"
+                            type="text"
+                            autoComplete="name"
+                            placeholder="Nhập tên công ty"
+                            className={cn(
+                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
+                                errors?.companyName && 'ring-red-500'
+                            )}
+                            {...register("companyName", { required: 'Vui lòng nhập tên công ty!' })}
+                        />
+                        {errors?.companyName && <span className="absolute text-sm mt-1 text-red-500 top-full w-full left-0">{errors?.companyName.message as string}</span>}
+                    </div>
+                </div>
                 <div className="flex mb-5 flex-col md:flex-row gap-5">
                     <div className="relative w-full md:w-2/5 grow">
                         <label
@@ -63,7 +85,7 @@ export default function PersonalInfo() {
                                 'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
                                 errors?.fullName && 'ring-red-500'
                             )}
-                            {...register("fullName", { required: 'Vui lòng nhập họ và tên' })}
+                            {...register("fullName", { required: 'Vui lòng nhập họ và tên!' })}
                         />
                         {errors?.fullName && <span className="absolute text-sm mt-1 text-red-500 top-full w-full left-0">{errors?.fullName.message as string}</span>}
                     </div>
@@ -97,9 +119,27 @@ export default function PersonalInfo() {
                                 'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
                                 errors?.phoneNumber && 'ring-red-500'
                             )}
-                            {...register("phoneNumber", { required: 'Vui lòng nhập số điện thoại' })}
+                            {...register("phoneNumber", { required: 'Vui lòng nhập số điện thoại!' })}
                         />
                         {errors?.phoneNumber && <span className="absolute text-sm mt-1 text-red-500 top-full w-full left-0">{errors?.phoneNumber.message as string}</span>}
+                    </div>
+                    <div className="relative w-full md:w-2/5 grow">
+                        <label
+                            htmlFor="address"
+                            className="block text-md mb-2 font-medium text-gray-600"
+                        >Địa chỉ</label>
+                        <input
+                            id="address"
+                            type="tel"
+                            autoComplete="address"
+                            placeholder="Nhập địa chỉ"
+                            className={cn(
+                                'px-3 py-1 w-full text-md rounded-md ring-1 ring-gray-300 focus:outline-hidden focus:ring-sky-600',
+                                errors?.address && 'ring-red-500'
+                            )}
+                            {...register("address", { required: 'Vui lòng nhập địa chỉ!' })}
+                        />
+                        {errors?.address && <span className="absolute text-sm mt-1 text-red-500 top-full w-full left-0">{errors?.address.message as string}</span>}
                     </div>
                     {/* <div className="relative w-full md:w-2/5 grow"></div> */}
                 </div>

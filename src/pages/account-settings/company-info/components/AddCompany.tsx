@@ -1,202 +1,212 @@
 import { useState } from "react"
-import { CompanyWithoutInfoRequest } from "../../../../shared/types/company"
 import LogoUpload from "./LogoUpload"
 import BusinessTypeOptions from "./BusinessTypeOptions"
-import { Input, Select } from "antd"
+import { Form, Input, Select } from "antd"
 import { COMPANY_FIELDS } from "../../../../shared/constants/companyField"
 import TextEditor from "../../../../shared/components/quill/QuillTextEditor"
 import placeholderImg from "../../../../assets/images/placeholder.webp"
+import CoverPhotoUpload from "./CoverPhotoUpload"
 
-type CompanyRequest = CompanyWithoutInfoRequest
-
-type ErrorsType = Record<keyof CompanyRequest, boolean>
 
 const SIZE_OPTIONS = ['1-9', '10-24', '25-99', '100-499', '500-1000', '1000+', '3000+', '5000+', '10000+',]
 
-const INIT_COMPANY: CompanyRequest = {
-    name: '',
-    address: '',
-    description: '',
-    business_type: 0,
-    email: '',
-    fields: [],
-    logo_url: '',
-    phone: '',
-    size: SIZE_OPTIONS[0],
-    tax_code: '',
-    website: '',
-}
-
 export default function AddCompany() {
 
-    const [errors, setErrors] = useState<ErrorsType | null>(null)
-    const [companyData, setCompanyData] = useState<CompanyRequest>(INIT_COMPANY)
+    const [logo, setLogo] = useState('')
+    const [coverPhoto, setCoverPhoto] = useState('')
+    const [businessType, setBusinessType] = useState(0)
 
-    const reset = () => {
-        setCompanyData(INIT_COMPANY)
-        setErrors(null)
-    }
-
-    const checkValid = () : boolean => {
-        const newErrors = {
-            // Add not valid case of attributes
-        } as ErrorsType
-
-        if (Object.values(newErrors).some(error => error)) {
-            setErrors(newErrors)
-            return false
-        }
-        
-        setErrors(null)
-        return true
-    }
-
-    const onSubmit = () => {
-        if(!checkValid()) {
-            return
-        }
-        console.log(companyData)
-    }
-
-    const handleChange = (
-        key: keyof CompanyRequest,
-        value: CompanyRequest[keyof CompanyRequest],
-        required: boolean = false
-    ) => {
-
-        if(required) {
-            setErrors(prevErrors => ({
-                ...prevErrors,
-                [key]: !value || (typeof value === 'object' ? value.length === 0 : false)
-            }) as ErrorsType)
-        }
-
-        setCompanyData(prevCompany => ({
-            ...prevCompany,
-            [key]: value
-        }) as CompanyRequest)
+    const onSubmit = (value: any) => {
+        console.log({
+            ...value,
+            logo_url: logo,
+            cover_photo: coverPhoto,
+            business_type: businessType
+        })
     }
 
     return (
-        <div className="p-3 mb-3 border rounded-md">
-            <div className="flex w-full justify-center mb-3">
-                <LogoUpload src={companyData?.logo_url ? companyData?.logo_url : placeholderImg} onChange={(e) => handleChange('logo_url', e as string)}/>
+        <div className="p-4 mb-3 border rounded-md">
+            <p className="mb-3 text-sm">Ảnh đại diện</p>
+            <div className="flex w-full mb-5">
+                <LogoUpload src={logo ? logo : placeholderImg} onChange={(e) => setLogo(e as string)}/>
+            </div>
+            <p className="mb-3 text-sm">Ảnh bìa</p>
+            <div className="flex w-full justify-center mb-5">
+                <CoverPhotoUpload src={coverPhoto} onChange={(e) => setCoverPhoto(e as string)}/>
             </div>
             <div className="flex w-full mb-3">
-                <BusinessTypeOptions selectedValue={companyData?.business_type} onChange={(e) => handleChange('business_type', e)}/>
+                <BusinessTypeOptions selectedValue={businessType} onChange={setBusinessType}/>
             </div>
-            <div className="p-3 w-full flex flex-col gap-3">
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Mã số thuế{companyData?.business_type === 1 && ' người đại diện'} <span className="text-red-500">*</span></p>
-                        <Input
-                            status={errors?.tax_code ? 'error' : ''}
-                            placeholder="Mã số thuế"
-                            value={companyData.tax_code ?? ''}
-                            onChange={(e) => handleChange('tax_code', e.target.value, true)}
-                        />
-                    </div>
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">{companyData?.business_type === 0 ? 'Tên công ty' : 'Tên hộ kinh doanh'} <span className="text-red-500">*</span></p>
-                        <Input
-                            status={errors?.name ? 'error' : ''}
-                            placeholder={companyData?.business_type === 0 ? 'Tên công ty' : 'Tên hộ kinh doanh'}
-                            value={companyData.name ?? ''}
-                            onChange={(e) => handleChange('name', e.target.value, true)}
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Website</p>
-                        <Input
-                            placeholder="https://..."
-                            value={companyData.website ?? ''}
-                            onChange={(e) => handleChange('website', e.target.value)}
-                        />
-                    </div>
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Lĩnh vực hoạt động <span className="text-red-500">*</span></p>
-                        <Select
-                            showSearch
-                            mode="multiple"
-                            status={errors?.fields ? 'error' : ''}
-                            value={companyData.fields}
-                            className="w-full"
-                            onChange={(e) => handleChange('fields', e, true)}
-                            placeholder="Chọn lĩnh vực hoạt động"
-                            options={COMPANY_FIELDS.map(item => (
+            <Form
+                layout="vertical"
+                onFinish={onSubmit}
+                className="w-full"
+            >
+                <div className="w-full flex flex-col gap-3">
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label={`Mã số thuế ${businessType === 1 ? ' người đại diện' : ''}`}
+                            rules={[
                                 {
-                                    value: item.id,
-                                    label: item.name
+                                    required: true,
+                                    message: 'Vui lòng nhập mã số thuế!'
                                 }
-                            ))}
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Quy mô <span className="text-red-500">*</span></p>
-                        <Select
-                            showSearch
-                            status={errors?.size ? 'error' : ''}
-                            value={companyData.size}
-                            className="w-full"
-                            onChange={(e) => handleChange('size', e, true)}
-                            placeholder="Chọn quy mô công ty"
-                            options={SIZE_OPTIONS.map(item => (
+                            ]}
+                            name="tax_code"
+                        >
+                            <Input
+                                placeholder="Nhập mã số thuế"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label={businessType === 0 ? 'Tên công ty' : 'Tên hộ kinh doanh'}
+                            rules={[
                                 {
-                                    value: item,
-                                    label: `${item} nhân viên`
+                                    required: true,
+                                    message: 'Vui lòng nhập tên công ty!'
                                 }
-                            ))}
-                        />
+                            ]}
+                            name="name"
+                        >
+                            <Input
+                                placeholder="Nhập tên công ty"
+                            />
+                        </Form.Item>
                     </div>
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Địa chỉ <span className="text-red-500">*</span></p>
-                        <Input
-                            status={errors?.address ? 'error' : ''}
-                            placeholder="Địa chỉ"
-                            value={companyData.address ?? ''}
-                            onChange={(e) => handleChange('address', e.target.value, true)}
-                        />
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <Form.Item
+                                className="w-full md:w-2/5 grow"
+                                label="Website"
+                                name="website"
+                            >
+                                <Input
+                                    placeholder="https://..."
+                                />
+                        </Form.Item>
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Lĩnh vực hoạt động"
+                            name="fields"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Vui lòng chọn lĩnh vực hoạt động!"
+                                }
+                            ]}
+                        >
+                            <Select
+                                showSearch
+                                mode="multiple"
+                                className="w-full"
+                                placeholder="Chọn lĩnh vực hoạt động"
+                                options={COMPANY_FIELDS.map(item => (
+                                    {
+                                        value: item.id,
+                                        label: item.name
+                                    }
+                                ))}
+                            />
+                        </Form.Item>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Quy mô công ty"
+                            name="size"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Vui lòng chọn quy mô công ty!"
+                                }
+                            ]}
+                        >
+                            <Select
+                                showSearch
+                                className="w-full"
+                                placeholder="Chọn quy mô công ty"
+                                options={SIZE_OPTIONS.map(item => (
+                                    {
+                                        value: item,
+                                        label: `${item} nhân viên`
+                                    }
+                                ))}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Địa chỉ"
+                            name="address"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng nhập địa chỉ!'
+                                }
+                            ]}
+                        >
+                            <Input
+                                placeholder="Địa chỉ"
+                            />
+                        </Form.Item>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Email"
+                            name="email"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng nhập email!'
+                                }
+                            ]}
+                        >
+                            <Input
+                                placeholder="Nhập email"
+                                type="email"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Số điện thoại"
+                            name="phone"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng nhập số điện thoại!'
+                                }
+                            ]}
+                        >
+                            <Input
+                                placeholder="Nhập số điện thoại"
+                                type="tel"
+                            />
+                        </Form.Item>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-3">
+                        <Form.Item
+                            className="w-full md:w-2/5 grow"
+                            label="Mô tả công ty"
+                            name="description"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng nhập mô tả công ty!'
+                                }
+                            ]}
+                        >
+                            <TextEditor
+                                placeholder="Mô tả công ty"
+                            />
+                        </Form.Item>
                     </div>
                 </div>
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Email <span className="text-red-500">*</span></p>
-                        <Input
-                            status={errors?.email ? 'error' : ''}
-                            placeholder="Email"
-                            value={companyData.email ?? ''}
-                            onChange={(e) => handleChange('email', e.target.value, true)}
-                        />
-                    </div>
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Số điện thoại <span className="text-red-500">*</span></p>
-                        <Input
-                            status={errors?.phone ? 'error' : ''}
-                            placeholder="Số điện thoại"
-                            value={companyData.phone ?? ''}
-                            onChange={(e) => handleChange('phone', e.target.value, true)}
-                        />
-                    </div>
+                <div className="flex w-full justify-end gap-3">
+                    <button type="submit" className="px-5 py-2 rounded-md bg-primary text-white text-md">Tạo mới</button>
                 </div>
-                <div className="flex flex-col md:flex-row gap-3">
-                    <div className="w-full md:w-2/5 grow">
-                        <p className="text-gray-500 text-md font-medium mb-2">Mô tả công ty</p>
-                        <TextEditor
-                            value={companyData.description}
-                            onChange={(value) => handleChange('description', value)}
-                            placeholder="Mô tả công ty"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="flex w-full justify-end gap-3">
-                <button type="button" className="px-5 py-2 rounded-md bg-gray-100 text-black text-md" onClick={reset}>Hủy</button>
-                <button type="submit" className="px-5 py-2 rounded-md bg-primary text-white text-md" onClick={onSubmit}>Tạo mới</button>
-            </div>
+            </Form>
         </div>
     )
 }

@@ -17,6 +17,7 @@ const Services = lazy(() => import("./pages/services/Services.js"))
 const ApplicantFiles = lazy(() => import("./pages/applicant-files/ApplicantFiles.js"))
 const RecruitmentCampaigns = lazy(() => import("./pages/recruitment-campaigns/RecruitmentCampaigns.js"))
 const UpdateJob = lazy(() => import("./pages/job/update-job/UpdateJob.js"))
+const ApplicantDetails = lazy(() => import("./pages/applicant-files/ApplicantDetails.js"))
 // import withProtected from "./shared/components/secure/withProtected";
 
 // const ProtectedLayout = withProtected(Layout)
@@ -62,6 +63,11 @@ export const router = createBrowserRouter([
                 id: "applicants",
                 path: "applicants",
                 element: <ApplicantFiles/>,
+            },
+            {
+                id: "applicant-details",
+                path: "applicants/:profileId",
+                element: <ApplicantDetails/>,
             },
             {
                 id: 'help',

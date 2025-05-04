@@ -44,6 +44,7 @@ const ConfirmationModal = ({
                         "px-4 py-1 rounded-md bg-sky-500 hover:bg-sky-600 me-2",
                         cancelButtonClassName,
                     )}
+                    onClick={onClose}
                 >
                     {cancelText}
                 </button>,
@@ -53,6 +54,7 @@ const ConfirmationModal = ({
                         "px-4 py-1 rounded-md bg-gray-400 hover:bg-gray-500",
                         confirmButtonClassName,
                     )}
+                    onClick={onConfirm}
                 >
                     {confirmText}
                 </button>

@@ -14,5 +14,5 @@ export type Job = {
     number_of_recruits: number;
     rank: number;
     requirement: string;
-	status: number;
+	status: number
 }

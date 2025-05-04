@@ -43,13 +43,13 @@ export default function AvatarUpload({src, onChange}: AvatarUploadProps) {
                 type="file"
                 onChange={handleInputChnage}
             />
-            <div className="relative w-12 flex items-center">
-                <div className="absolute w-12 h-12 border rounded-full">
-                    <img src={preview} alt="User avatar" className="absolute object-cover h-full w-full rounded-full"/>
+            <div className="relative size-28 flex items-center">
+                <div className="absolute size-28 border rounded-full">
+                    <img src={preview} alt="User avatar" className="absolute object-cover size-full rounded-full"/>
                     <button
                         onClick={() => setOpen(true)}
                         className={cn(
-                            "absolute justify-center items-center h-full w-full rounded-full",
+                            "absolute justify-center items-center size-full rounded-full",
                             "text-white bg-gray-400/15",
                             "transition-all opacity-0 hover:opacity-100",
                             imgSrc ? 'flex' : 'hidden'

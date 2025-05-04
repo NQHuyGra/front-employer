@@ -20,7 +20,7 @@ export default function LogoUpload({src, onChange}: LogoUploadProps) {
         setPreview(src)
     }, [src])
 
-    const handleInputChnage = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if(file) {
             base64Converter(file).then(result => {
@@ -39,14 +39,14 @@ export default function LogoUpload({src, onChange}: LogoUploadProps) {
     return (
         <div className="flex items-center gap-4">
             <input
-                id="user-avatar"
+                id="company-logo"
                 className="hidden"
                 type="file"
-                onChange={handleInputChnage}
+                onChange={handleInputChange}
                 accept="image/*"
             />
             <div className="relative w-20 h-20 border rounded-full">
-                <img src={preview} alt="User avatar" className="absolute object-cover h-full w-full rounded-full"/>
+                <img src={preview} alt="Company logo" className="absolute object-cover h-full w-full rounded-full"/>
                 <button
                     onClick={() => setOpen(true)}
                     className={cn(
@@ -58,7 +58,7 @@ export default function LogoUpload({src, onChange}: LogoUploadProps) {
                 >
                     <FaPen/>
                 </button>
-                <label htmlFor="user-avatar" className="h-9 w-9 border absolute -bottom-2 -right-2 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full cursor-pointer">
+                <label htmlFor="company-logo" className="h-9 w-9 border absolute -bottom-2 -right-2 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full cursor-pointer">
                     <IoCameraOutline/>
                 </label>
             </div>

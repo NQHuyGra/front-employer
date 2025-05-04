@@ -8,9 +8,10 @@ type ImageCropperProps = {
     src?: string
     onClose?: () => void
     onCrop?: (srcCropped: any) => void
+    aspect?: number
 }
 
-export default function ImageCropper({open, src, onClose, onCrop}: ImageCropperProps) {
+export default function ImageCropper({open, src, onClose, onCrop, aspect = 1}: ImageCropperProps) {
 
     const [loading, setLoading] = useState(false)
     const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -62,7 +63,7 @@ export default function ImageCropper({open, src, onClose, onCrop}: ImageCropperP
                             crop={crop}
                             zoom={zoom}
                             rotation={rotation}
-                            aspect={1}
+                            aspect={aspect}
                             maxZoom={10}
                             zoomSpeed={2}
                             onRotationChange={setRotation}
