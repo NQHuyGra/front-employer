@@ -1,13 +1,18 @@
 import { Form, Input, Radio, Select } from "antd"
 import { RegisterRequest } from "../../../shared/types/auth"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { fetchDistricts, fetchProvinces } from '../../../shared/apis/provinceApi'
 import { BsBuilding, BsEnvelope, BsPerson, BsShieldShaded, BsTelephone } from "react-icons/bs"
+import { registerApi } from "../../../shared/apis/authApi"
+import { toast } from "react-toastify"
+import { cn } from "../../../shared/utils/cn"
 
 export default function Register() {
 
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
     const [form] = Form.useForm()
     const [selectedProvince, setSelectedProvince] = useState('')
     const { data: provinces = [], isLoading: isLoadingProvinces } = useQuery({
@@ -30,13 +35,36 @@ export default function Register() {
         form.setFieldValue('work_district', null)
     }
 
-    const onSubmit = (data: RegisterRequest) => {
-        console.log(data)
+    const onSubmit = (data: any) => {
+
+        setLoading(true)
+
+        const requestData: RegisterRequest = {
+            email: data.email,
+            password: data.password,
+            confirm_password: data.confirm_password,
+            full_name: data.full_name,
+            phone_number: data.phone_number,
+            gender: data.gender,
+            company_name: data.company_name,
+            address: `${data.work_district}, ${data.work_city}`
+        }
+
+        registerApi(requestData)
+            .then((res) => {
+                toast.success(res?.message)
+                navigate("/login")
+            })
+            .catch((err) => {
+                toast.error(err?.response?.data?.message || err?.message)
+            })
+            .finally(() => setLoading(false))
+
     }
 
     return (
         <div className="py-10 px-2 mx-auto max-w-[600px]">
-            <h1 className="font-semibold text-primary text-4xl mb-5">Chào mừng bạn đã quay trở lại</h1>
+            <h1 className="font-semibold text-primary text-4xl mb-5">Chào mừng bạn đã đến với ViecMoi</h1>
             <Form
                 layout="vertical"
                 onFinish={onSubmit}
@@ -216,7 +244,16 @@ export default function Register() {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <button type="submit" className="bg-primary flex items-center justify-center rounded-lg text-white text-base w-full px-5 py-2">Đăng ký</button>
+                    <button
+                        type="submit"
+                        className={cn(
+                            "bg-primary flex items-center justify-center rounded-lg text-white text-base w-full px-5 py-2",
+                            loading && "opacity-50 cursor-progress"
+                        )}
+                        disabled={loading}
+                    >
+                        {loading ? "Loading..." : "Đăng ký"}
+                    </button>
                 </Form.Item>
             </Form>
             <p className="text-center text-gray-700">Bạn đã có tài khoản? <Link to="/login" className="text-primary">Đăng nhập ngay</Link></p>

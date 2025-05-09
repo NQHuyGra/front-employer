@@ -9,6 +9,5 @@ export type RegisterRequest = AuthenticatedRequest & {
     gender: 'MALE' | 'FEMALE'
     phone_number: string
     company_name: string
-    work_city: string
-    work_district: string
+    address: string
 }

@@ -4,11 +4,13 @@ import placeholder from "../../assets/images/placeholder.webp"
 import SiderItem from "./SiderItem"
 import { Link } from "react-router-dom"
 import useSiderRoutes from "../../shared/hooks/useSiderRoutes"
+import useAuth from "../../shared/hooks/useAuth"
 
 export default function Sider() {
 
     const { isOpen, toggle } = useSider()
     const { routes } = useSiderRoutes()
+    const { user } = useAuth()
 
     return (
         <>
@@ -20,11 +22,11 @@ export default function Sider() {
                     <Link to="/account/settings" className="flex items-center gap-4">
                         <img
                             className="border rounded-full object-cover w-10 h-10"
-                            src={placeholder}
+                            src={user?.avatar_url || placeholder}
                             alt=""
                         />
                         <div>
-                            <h5 className="font-medium">Nguyễn Quang Huy</h5>
+                            <h5 className="font-medium">{user?.full_name}</h5>
                             <p className="text-sm">Employer</p>
                         </div>
                     </Link>

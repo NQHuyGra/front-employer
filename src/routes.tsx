@@ -18,16 +18,16 @@ const ApplicantFiles = lazy(() => import("./pages/applicant-files/ApplicantFiles
 const RecruitmentCampaigns = lazy(() => import("./pages/recruitment-campaigns/RecruitmentCampaigns.js"))
 const UpdateJob = lazy(() => import("./pages/job/update-job/UpdateJob.js"))
 const ApplicantDetails = lazy(() => import("./pages/applicant-files/ApplicantDetails.js"))
-// import withProtected from "./shared/components/secure/withProtected";
+import withProtected from "./shared/components/secure/withProtected";
 
-// const ProtectedLayout = withProtected(Layout)
+const ProtectedLayout = withProtected(Layout)
 
 export const router = createBrowserRouter([
     {
         id: 'root',
         path: '/',
-        // element: <ProtectedLayout/>,
-        element: <Layout/>,
+        element: <ProtectedLayout/>,
+        // element: <Layout/>,
         children: [
             {
                 id: 'dashboard',

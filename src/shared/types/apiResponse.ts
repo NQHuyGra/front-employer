@@ -1,7 +1,7 @@
 export type ApiResponse<T> = {
     status: number
     message: string
-    data: T
+    result: T
 }
 
 export type ApiResponseWithMeta<T> = ApiResponse<T> & {

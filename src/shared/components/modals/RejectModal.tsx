@@ -24,7 +24,7 @@ const RejectModal = ({
     profile_name = ""
 }: RejectModalProps) => {
 
-    const [reason, setReason] = useState<string>("")
+    const [reason, setReason] = useState<string>("Hồ sơ chưa phù hợp")
 
     const handleSubmit = () => {
         onSubmit?.(reason)
@@ -45,10 +45,21 @@ const RejectModal = ({
             <Form
                 layout="vertical"
             >
-                <Form.Item label="Lý do từ chối" required>
+                <Form.Item label="Lý do từ chối">
                     <Radio.Group className="!flex !flex-col gap-2">
                         {REASON.map((item) => (
-                            <Radio name="reject" value={item} onChange={e => setReason(e.target.value)}>{item}</Radio>
+                            <Radio
+                                name="reject"
+                                value={item}
+                                onChange={e => {
+                                    if(e.target.checked) {
+                                        setReason(e.target.value)
+                                    }
+                                }}
+                                checked={item == reason}
+                            >
+                                {item}
+                            </Radio>
                         ))}
                     </Radio.Group>
                 </Form.Item>

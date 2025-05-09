@@ -6,11 +6,13 @@ import { cn } from "../../shared/utils/cn";
 import useSider from "../../shared/hooks/useSider";
 import { IoHelpCircleOutline, IoLogOutOutline } from "react-icons/io5";
 import useLogoutModal from "../../shared/hooks/useLogoutModal";
+import useAuth from "../../shared/hooks/useAuth";
 
 export default function Header() {
 
     const { isOpen, toggle } = useSider()
     const { open: openLogoutModal } = useLogoutModal()
+    const { user } = useAuth()
 
     const button = 'flex items-center justify-center gap-2 h-9 min-w-9 px-2 rounded-full bg-white/20'
 
@@ -53,7 +55,7 @@ export default function Header() {
                     </div>
                 )} trigger="click">
                     <button className={button} aria-label="Account popover">
-                        <Avatar size="small" src={placeholder} alt=""/>
+                        <Avatar size="small" src={user?.avatar_url || placeholder} alt=""/>
                         <FaCaretDown />
                     </button>
                 </Popover>

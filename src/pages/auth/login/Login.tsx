@@ -1,16 +1,35 @@
 import { Form, Input } from "antd";
 import { AuthenticatedRequest } from "../../../shared/types/auth";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { loginApi } from "../../../shared/apis/authApi";
+import useAuth from "../../../shared/hooks/useAuth";
+import { toast } from "react-toastify";
+import { cn } from "../../../shared/utils/cn";
 
 export default function Login() {
+
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const {login} = useAuth()
 
     useEffect(() => {
         document.title = 'Đăng nhập'
     }, [])
 
     const onSubmit = (data: AuthenticatedRequest) => {
-        console.log(data)
+        
+        setLoading(true)
+
+        loginApi(data).then((res) => {
+            login(res.result.accessToken, res.result.user)
+            navigate('/')
+            toast.success("Đăng nhập thành công")
+        }).catch((err) => {
+            console.log(err)
+            toast.error(err?.response?.data?.message || err?.message)
+        }).finally(() => setLoading(false))
+
     }
 
     return (
@@ -54,7 +73,15 @@ export default function Login() {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <button type="submit" className="bg-primary flex items-center justify-center rounded-lg text-white text-base w-full px-5 py-2">Đăng nhập</button>
+                    <button
+                        type="submit"
+                        className={cn(
+                            "bg-primary flex items-center justify-center rounded-lg text-white text-base w-full px-5 py-2",
+                            loading && "opacity-50 cursor-progress"
+                        )}
+                    >
+                        {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+                    </button>
                 </Form.Item>
             </Form>
             <p className="text-center text-gray-700">Bạn chưa có tài khoản? <Link to="/register" className="text-primary">Đăng ký ngay</Link></p>
