@@ -4,7 +4,7 @@ import { User, UserUpdateRequest } from "../types/user";
 import http from "../utils/http";
 
 export const updateApi = async (value: UserUpdateRequest) => {
-    const res = await http.put<ApiResponse<User>>(`/identity/users/update/employer`, value)
+    const res = await http.put<ApiResponse<User>>(`/identity/users/update/my-info`, value)
     return res.data
 }
 

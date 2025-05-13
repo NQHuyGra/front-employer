@@ -6,6 +6,11 @@ import { COMPANY_FIELDS } from "../../../../shared/constants/companyField"
 import TextEditor from "../../../../shared/components/quill/QuillTextEditor"
 import placeholderImg from "../../../../assets/images/placeholder.webp"
 import CoverPhotoUpload from "./CoverPhotoUpload"
+import { Company } from "../../../../shared/types/company"
+import { createCompany } from "../../../../shared/apis/companyApi"
+import { toast } from "react-toastify"
+import { cn } from "../../../../shared/utils/cn"
+import useCompany from "../../../../shared/hooks/useCompany"
 
 
 const SIZE_OPTIONS = ['1-9', '10-24', '25-99', '100-499', '500-1000', '1000+', '3000+', '5000+', '10000+',]
@@ -15,13 +20,29 @@ export default function AddCompany() {
     const [logo, setLogo] = useState('')
     const [coverPhoto, setCoverPhoto] = useState('')
     const [businessType, setBusinessType] = useState(0)
+    const { create, isCreating } = useCompany()
 
     const onSubmit = (value: any) => {
-        console.log({
+
+        const data : Company = {
             ...value,
             logo_url: logo,
             cover_photo: coverPhoto,
             business_type: businessType
+        }
+        
+        create(data, {
+            onSuccess: (res) => {
+                toast.success(res.message ?? "Tạo công ty thành công!")
+            },
+            onError: (err) => {
+                toast.error(err?.message  ?? "Tạo công ty thất bại!")
+            },
+            onSettled: () => {
+                setLogo('')
+                setCoverPhoto('')
+                setBusinessType(0)
+            }
         })
     }
 
@@ -204,7 +225,12 @@ export default function AddCompany() {
                     </div>
                 </div>
                 <div className="flex w-full justify-end gap-3">
-                    <button type="submit" className="px-5 py-2 rounded-md bg-primary text-white text-md">Tạo mới</button>
+                    <button
+                        type="submit"
+                        className={cn(
+                            "px-5 py-2 rounded-md bg-primary text-white text-md",
+                            isCreating && "opacity-50 cursor-progress"
+                        )}>{isCreating ? "Đang xử lý" : "Tạo mới"}</button>
                 </div>
             </Form>
         </div>

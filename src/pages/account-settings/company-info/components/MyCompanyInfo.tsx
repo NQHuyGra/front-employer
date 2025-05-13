@@ -3,6 +3,7 @@ import LabelStatus from "../../../../shared/components/LabelStatus";
 import { Company } from "../../../../shared/types/company";
 import { FaPenToSquare } from "react-icons/fa6";
 import TrustedContent from "../../../../shared/components/trusted-content/TrustedContent";
+import { COMPANY_FIELDS } from "../../../../shared/constants/companyField";
 
 type MyCompanyInfoProps = {
     company: Company
@@ -14,13 +15,6 @@ export default function MyCompanyInfo({company, onOpenEditForm}: MyCompanyInfoPr
     return (
         <>
             <div className="p-3 mb-3 border rounded-md flex items-center">
-                <div className="grow">
-                    <div className="flex items-center gap-2">
-                        <p className="font-medium">Yêu cầu cập nhật thông tin công ty</p>
-                        <LabelStatus status={company.company_info_request.status}/>
-                    </div>
-                    <p className="text-sm text-gray-600">Ngày yêu cầu gần nhất: 10:00 01/10/2024</p>
-                </div>
                 <button
                     className="text-gray-600 font-medium flex items-center gap-2"
                     onClick={onOpenEditForm}
@@ -53,7 +47,13 @@ export default function MyCompanyInfo({company, onOpenEditForm}: MyCompanyInfoPr
                     <div className="flex flex-col md:flex-row gap-3">
                         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-2/5 grow">
                             <p className="text-gray-500 font-medium min-w-40">Lĩnh vực hoạt động:</p>
-                            <p className="text-gray-700 grow">{company.fields_str?.join(', ')}</p>
+                            <p className="text-gray-700 grow">
+                                {company.fields
+                                    .map(id => COMPANY_FIELDS.find(item => item.id == id)?.name)
+                                    .filter(Boolean)
+                                    .join(', ')
+                                }
+                            </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-2/5 grow">
                             <p className="text-gray-500 font-medium min-w-40">Quy mô:</p>
