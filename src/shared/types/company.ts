@@ -13,3 +13,10 @@ export type Company = {
     website?: string | null
     cover_photo?: string
 }
+
+export type CompanyListItem = {
+    id: string
+    name: string
+    email: string
+    logo_url: string
+}
