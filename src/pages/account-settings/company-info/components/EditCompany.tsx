@@ -9,7 +9,6 @@ import CoverPhotoUpload from "./CoverPhotoUpload"
 import placeholderImg from "../../../../assets/images/placeholder.webp"
 import { cn } from "../../../../shared/utils/cn"
 import useCompany from "../../../../shared/hooks/useCompany"
-import { toast } from "react-toastify"
 
 type CompanyFormProps = {
     company?: Company
@@ -34,12 +33,8 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
         }
 
         update(data, {
-            onSuccess: (res) => {
+            onSuccess: () => {
                 onCloseForm?.()
-                toast.success(res?.message ?? 'Cập nhật thông tin công ty thành công!')
-            },
-            onError: (error) => {
-                toast.error(error?.message || 'Có lỗi xảy ra, vui lòng thử lại sau!')
             }
         })
     }
@@ -61,6 +56,7 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                 layout="vertical"
                 onFinish={onSubmit}
                 className="w-full"
+                initialValues={company}
             >
                 <div className="w-full flex flex-col gap-3">
                     <div className="flex flex-col md:flex-row gap-3">
@@ -76,7 +72,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                             name="tax_code"
                         >
                             <Input
-                                value={company?.tax_code}
                                 placeholder="Nhập mã số thuế"
                             />
                         </Form.Item>
@@ -89,10 +84,9 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                                     message: 'Vui lòng nhập tên công ty!'
                                 }
                             ]}
-                            name="company_name"
+                            name="name"
                         >
                             <Input
-                                value={company?.name}
                                 placeholder="Nhập tên công ty"
                             />
                         </Form.Item>
@@ -104,14 +98,13 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                                 name="website"
                             >
                                 <Input
-                                    value={company?.website ?? ''}
                                     placeholder="https://..."
                                 />
                         </Form.Item>
                         <Form.Item
                             className="w-full md:w-2/5 grow"
                             label="Lĩnh vực hoạt động"
-                            name="company_fields"
+                            name="fields"
                             rules={[
                                 {
                                     required: true,
@@ -130,7 +123,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                                         label: item.name
                                     }
                                 ))}
-                                value={company?.fields}
                             />
                         </Form.Item>
                     </div>
@@ -156,7 +148,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                                         label: `${item} nhân viên`
                                     }
                                 ))}
-                                value={company?.size}
                             />
                         </Form.Item>
                         <Form.Item
@@ -171,7 +162,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                             ]}
                         >
                             <Input
-                                value={company?.address}
                                 placeholder="Địa chỉ"
                             />
                         </Form.Item>
@@ -189,7 +179,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                             ]}
                         >
                             <Input
-                                value={company?.email}
                                 placeholder="Nhập email"
                                 type="email"
                             />
@@ -206,7 +195,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                             ]}
                         >
                             <Input
-                                value={company?.phone}
                                 placeholder="Nhập số điện thoại"
                                 type="tel"
                             />
@@ -225,7 +213,6 @@ export default function EditCompany({company, onCloseForm}: CompanyFormProps) {
                             ]}
                         >
                             <TextEditor
-                                value={company?.description}
                                 placeholder="Mô tả công ty"
                             />
                         </Form.Item>

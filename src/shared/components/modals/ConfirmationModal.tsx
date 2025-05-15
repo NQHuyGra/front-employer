@@ -12,6 +12,7 @@ type ConfirmationModalProps = {
     cancelText?: React.ReactNode
     confirmButtonClassName?: string
     cancelButtonClassName?: string
+    loading?: boolean
 }
 
 const ConfirmationModal = ({
@@ -23,7 +24,8 @@ const ConfirmationModal = ({
     confirmText = 'Xác nhận',
     cancelText = 'Hủy',
     confirmButtonClassName = 'bg-primary text-white',
-    cancelButtonClassName = 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+    cancelButtonClassName = 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+    loading = false,
 } : ConfirmationModalProps) => {
 
     return (
@@ -53,8 +55,10 @@ const ConfirmationModal = ({
                     className={cn(
                         "px-4 py-1 rounded-md bg-gray-400 hover:bg-gray-500",
                         confirmButtonClassName,
+                        loading && "opacity-50 cursor-progress"
                     )}
                     onClick={onConfirm}
+                    disabled={loading}
                 >
                     {confirmText}
                 </button>

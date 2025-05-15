@@ -1,96 +1,123 @@
-import { Link } from "react-router-dom";
-import Card from "../../../shared/components/cards/Card";
-import { cn } from "../../../shared/utils/cn";
 import { useState } from "react";
 import ConfirmationModal from "../../../shared/components/modals/ConfirmationModal";
+import JobBox from "./JobBox";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteJob, getJobs, toggleEnableJob } from "../../../shared/apis/jobApi";
+import StateBox from "./StateBox";
+import Pagination from "../../../shared/components/pagination/Pagination";
+import { Select } from "antd";
+import Card from "../../../shared/components/cards/Card";
+import { toast } from "react-toastify";
 
 export default function CreatedJobs() {
 
-    const [openStopPosting, setOpenStopPosting] = useState({isOpen: false, jobTitle: ""})
-    const [openPosting, setOpenPosting] = useState({isOpen: false, jobTitle: ""})
-    const [openDelete, setOpenDelete] = useState({isOpen: false, jobTitle: ""})
+    const [page, setPage] = useState(1)
+    const [sortBy, setSortBy] = useState<string>("createdAt")
+    const [openStopPosting, setOpenStopPosting] = useState({isOpen: false, jobTitle: "", jobId: ""})
+    const [openPosting, setOpenPosting] = useState({isOpen: false, jobTitle: "", jobId: ""})
+    const [openDelete, setOpenDelete] = useState({isOpen: false, jobTitle: "", jobId: ""})
+    const queryClient = useQueryClient()
+    const { data, isLoading, isError } = useQuery({
+        queryKey: [
+            "my-jobs", {
+            page: page - 1,
+            size: 6,
+            sortBy,
+            direction: "desc"
+        }],
+        queryFn: getJobs,
+        retry: 1,
+    })
 
+    const enableMutation = useMutation({
+        mutationFn: toggleEnableJob,
+        onSuccess: (data) => {
+            handleClosePosting()
+            handleCloseStopPosting()
+            toast.success(data.message ?? "Thao tác thành công!")
+            queryClient.invalidateQueries({
+                queryKey: ["my-jobs", {
+                    page: page - 1,
+                    size: 6,
+                    sortBy,
+                    direction: "desc"
+                }]
+            })
+        },
+    })
 
-    const handleOpenStopPosting = (jobId: string, jobTitle: string) => {
-        setOpenStopPosting({isOpen: true, jobTitle: jobTitle})
-    }
+    const deleteMutation = useMutation({
+        mutationFn: deleteJob,
+        onSuccess: (data) => {
+            handleCloseDelete()
+            toast.success(data.message ?? "Xóa tin tuyển dụng thành công!")
+            queryClient.invalidateQueries({
+                queryKey: ["my-jobs"]
+            })
+        },
+    })
 
     const handleCloseStopPosting = () => {
-        setOpenStopPosting({isOpen: false, jobTitle: ""})
-    }
-
-    const handleOpenPosting = (jobId: string, jobTitle: string) => {
-        setOpenPosting({isOpen: true, jobTitle: jobTitle})
+        setOpenStopPosting({isOpen: false, jobTitle: "", jobId: ""})
     }
 
     const handleClosePosting = () => {
-        setOpenPosting({isOpen: false, jobTitle: ""})
-    }
-
-    const handleOpenDelete = (jobId: string, jobTitle: string) => {
-        setOpenDelete({isOpen: true, jobTitle: jobTitle})
+        setOpenPosting({isOpen: false, jobTitle: "", jobId: ""})
     }
 
     const handleCloseDelete = () => {
-        setOpenDelete({isOpen: false, jobTitle: ""})
+        setOpenDelete({isOpen: false, jobTitle: "", jobId: ""})
     }
 
     return (
         <>
-            {/* <Card className="m-4">
-                <div className="flex flex-col items-center justify-center h-full text-2xl font-bold text-gray-700">
-                    <p className="text-gray-500">Không có tin tuyển dụng nào được tạo.</p>
-                </div>
-            </Card> */}
-            {CREATED_JOBS.map(job => (
-                <Card className="m-4" key={job.id}>
-                    <div className="group flex lg:items-center justify-between flex-col lg:flex-row gap-4">
-                        <div>
-                            <h3 className="font-medium text-gray-800 text-xl line-clamp-1 group-hover:underline group-hover:text-primary transition-all">{job.title}</h3>
-                            <p className="text-xs text-gray-600">Thời hạn nộp hồ sơ: {job.deadline}</p>
-                            <p className="text-xs text-gray-600">Ngày tạo: {job.deadline}</p>
-                            <p className="text-xs text-gray-600">Chỉnh sửa lần cuối: {job.deadline}</p>
-                        </div>
-                        <div className="flex gap-3 flex-col lg:flex-row lg:items-center justify-between w-full lg:w-auto">
-                            <span className={cn(
-                                "",
-                                job.status === 1 ? "text-green-600" : "text-red-600",
-                            )}>
-                                {job.status === 1 ? "Đang tuyển" : "Ngừng tuyển"}
-                            </span>
-                            <div className="flex gap-2">
-                                <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white">{job.number_of_applicants} ứng viên</Link>
-                                <Link to={`/update-job/${job.id}`} className="px-5 py-1 rounded-md bg-primary text-white">Chỉnh sửa</Link>
-                                <button
-                                    className="px-5 py-1 rounded-md bg-amber-600 text-white"
-                                    onClick={() => handleOpenStopPosting(job.id, job.title)}
-                                >
-                                    Ngừng tuyển
-                                </button>
-                                {/* <button
-                                    className="px-5 py-1 rounded-md bg-amber-600 text-white"
-                                    onClick={() => handleOpenPosting(job.id, job.title)}
-                                >
-                                    Đăng tuyển
-                                </button> */}
-                                <button
-                                    className="px-5 py-1 rounded-md bg-red-600 text-white"
-                                    onClick={() => handleOpenDelete(job.id, job.title)}
-                                >
-                                    Xóa
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
+            <Card className="m-4">
+                <label htmlFor="sort-job">Sắp xếp theo: </label>
+                <Select
+                    id="sort-job"
+                    className="w-40"
+                    placeholder="Sắp xếp theo"
+                    onChange={setSortBy}
+                    value={sortBy}
+                    options={[
+                        {
+                            value: 'createdAt',
+                            label: 'Ngày tạo'
+                        },
+                        {
+                            value: 'updatedAt',
+                            label: 'Ngày cập nhật'
+                        },
+                    ]}
+                />
+            </Card>
+            <StateBox 
+                loading={isLoading}
+                error={isError}
+                noData={data?.result.jobs.length === 0}
+            />
+            {data?.result.jobs.map(job => (
+                <JobBox
+                    key={job.id}
+                    job={job}
+                    onDelete={(jobId, jobTitle) => setOpenDelete({isOpen: true, jobTitle, jobId})}
+                    onPosting={(jobId, jobTitle) => setOpenPosting({isOpen: true, jobTitle, jobId})}
+                    onStopPosting={(jobId, jobTitle) => setOpenStopPosting({isOpen: true, jobTitle, jobId})}
+                />
             ))}
+            <Pagination
+                currentPage={page}
+                onPageChange={setPage}
+                totalPages={data?.result.totalPages as number}
+            />
             <ConfirmationModal
                 isOpen={openStopPosting.isOpen}
                 title="Ngừng tuyển dụng"
                 description={<p className="text-base">Bạn có chắc chắn muốn ngừng tuyển dụng <span className="font-medium">{openStopPosting.jobTitle}</span> không?</p>}
                 onClose={handleCloseStopPosting}
-                onConfirm={handleCloseStopPosting}
+                onConfirm={() => enableMutation.mutate(openStopPosting.jobId)}
                 confirmText="Ngừng tuyển"
+                loading={enableMutation.isPending}
                 confirmButtonClassName="bg-amber-600 hover:bg-amber-700 text-white"
             />
             <ConfirmationModal
@@ -98,40 +125,21 @@ export default function CreatedJobs() {
                 title="Đăng tin tuyển dụng"
                 description={<p className="text-base">Bạn có chắc chắn muốn đăng tin tuyển dụng <span className="font-medium">{openPosting.jobTitle}</span> không?</p>}
                 onClose={handleClosePosting}
-                onConfirm={handleClosePosting}
+                onConfirm={() => enableMutation.mutate(openPosting.jobId)}
                 confirmText="Đăng tuyển"
+                loading={enableMutation.isPending}
                 confirmButtonClassName="bg-amber-600 hover:bg-amber-700 text-white"
             />
             <ConfirmationModal
                 isOpen={openDelete.isOpen}
                 title="Xóa tin tuyển dụng"
-                description={<p className="text-base">Bạn có chắc chắn muốn xóa tin tuyển dụng <span className="font-medium">{openStopPosting.jobTitle}</span> không?</p>}
+                description={<p className="text-base">Bạn có chắc chắn muốn xóa tin tuyển dụng <span className="font-medium">{openDelete.jobTitle}</span> không?</p>}
                 onClose={handleCloseDelete}
-                onConfirm={handleCloseDelete}
+                onConfirm={() => deleteMutation.mutate(openDelete.jobId)}
+                loading={deleteMutation.isPending}
                 confirmText="Xóa"
                 confirmButtonClassName="bg-red-600 hover:bg-red-700 text-white"
             />
         </>
     )
 }
-
-const CREATED_JOBS = [
-    {
-        id: "123",
-        title: "Lập trình viên React",
-        number_of_applicants: 10,
-        deadline: "2025-05-17",
-        status: 1,
-        created_at: "2025-05-01",
-        updated_at: "2025-05-02",
-    },
-    {
-        id: "124",
-        title: "Lập trình viên Java",
-        number_of_applicants: 20,
-        deadline: "2025-05-17",
-        status: 0,
-        created_at: "2025-05-01",
-        updated_at: "2025-05-02",
-    }
-]

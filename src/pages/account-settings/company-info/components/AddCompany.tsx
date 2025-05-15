@@ -7,8 +7,6 @@ import TextEditor from "../../../../shared/components/quill/QuillTextEditor"
 import placeholderImg from "../../../../assets/images/placeholder.webp"
 import CoverPhotoUpload from "./CoverPhotoUpload"
 import { Company } from "../../../../shared/types/company"
-import { createCompany } from "../../../../shared/apis/companyApi"
-import { toast } from "react-toastify"
 import { cn } from "../../../../shared/utils/cn"
 import useCompany from "../../../../shared/hooks/useCompany"
 
@@ -32,12 +30,6 @@ export default function AddCompany() {
         }
         
         create(data, {
-            onSuccess: (res) => {
-                toast.success(res.message ?? "Tạo công ty thành công!")
-            },
-            onError: (err) => {
-                toast.error(err?.message  ?? "Tạo công ty thất bại!")
-            },
             onSettled: () => {
                 setLogo('')
                 setCoverPhoto('')

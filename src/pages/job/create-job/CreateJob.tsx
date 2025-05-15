@@ -6,14 +6,30 @@ import { EXP } from "../../../shared/constants/exp";
 import QuillTextEditor from "../../../shared/components/quill/QuillTextEditor";
 import { FORM_OF_WORK } from "../../../shared/constants/formOfWork";
 import { CITIES } from "../../../shared/constants/city";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Job } from "../../../shared/types/job";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addJob } from "../../../shared/apis/jobApi";
+import { toast } from "react-toastify";
+import { cn } from "../../../shared/utils/cn";
 
 export default function CreateJob() {
 
+    const navigate = useNavigate()
+    const queryClient = useQueryClient()
+    const createMutation = useMutation({
+        mutationFn: addJob,
+        onSuccess: (data) => {
+            toast.success(data.message ?? "Tạo tin tuyển dụng thành công!")
+            queryClient.invalidateQueries({
+                queryKey: ["my-jobs"]
+            })
+            navigate("/jobs")
+        },
+    })
 
     const onSubmit = (values: Job) => {
-        console.log(values)
+        createMutation.mutate(values)
     }
 
     return (
@@ -24,6 +40,7 @@ export default function CreateJob() {
                 layout="vertical"
                 className="w-full"
                 onFinish={onSubmit}
+                scrollToFirstError
             >
                 <h1 className="text-xl  text-gray-800 mb-3">Thông tin việc làm</h1>
                 <Form.Item
@@ -298,8 +315,17 @@ export default function CreateJob() {
                     />
                 </Form.Item>
                 <div className="w-full flex justify-end gap-3">
-                    <Link to="/" className="!bg-gray-200 !text-gray-800 font-medium px-5 py-1 rounded-md hover:!bg-gray-300 !transition-all">Hủy</Link>
-                    <button className="bg-primary text-white font-medium px-5 py-1 rounded-md">Hoàn tất</button>
+                    <Link to="/jobs" className="!bg-gray-200 !text-gray-800 font-medium px-5 py-1 rounded-md hover:!bg-gray-300 !transition-all">Hủy</Link>
+                    <button
+                        className={cn(
+                            "bg-primary text-white font-medium px-5 py-1 rounded-md",
+                            createMutation.isPending && "!bg-primary/50 !cursor-progress"
+                        )}
+                        type="submit"
+                        disabled={createMutation.isPending}
+                    >
+                        {createMutation.isPending ? "Đang lưu..." : "Hoàn tất"}
+                    </button>
                 </div>
             </Form>
         </Card>

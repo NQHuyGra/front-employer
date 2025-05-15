@@ -3,13 +3,17 @@ import { Company, CompanyListItem } from "../types/company"
 import http from "../utils/http"
 
 export const fetchCompanyById = async (id: string) => {
-    const { data } = await http.get<ApiResponse<Company>>(`/company/${id}`)
+    const { data } = await http.get<ApiResponse<Company>>(`/company/id/${id}`)
     return data
 }
 
 export const fetchCompany = async () => {
-    const { data } = await http.get<ApiResponse<Company>>("/company/my-company")
-    return data
+    try {
+        const { data } = await http.get<ApiResponse<Company>>("/company/my-company")
+        return data
+    } catch (error) {
+        throw error
+    }
 }
 
 export const fetchCompanyList = async (
@@ -28,10 +32,14 @@ export const fetchCompanyList = async (
     }
 ) => {
     const [, params] = queryKey
-    const { data } = await http.get<ApiResponse<Meta & {
-        companies: CompanyListItem[]
-    }>>('/company/list', { params })
-    return data
+    try {
+        const { data } = await http.get<ApiResponse<Meta & {
+            companies: CompanyListItem[]
+        }>>('/company/list', { params })
+        return data
+    } catch (error) {
+        throw error
+    }
 }
 
 export const createCompany = async (data: Company) => {
@@ -40,7 +48,7 @@ export const createCompany = async (data: Company) => {
 }
 
 export const createCompanyById = async (id: string) => {
-    const { data: res } = await http.post<ApiResponse<Company>>('/company/create-by-id', id)
+    const { data: res } = await http.post<ApiResponse<Company>>('/company/create-by-id', {id})
     return res
 }
 

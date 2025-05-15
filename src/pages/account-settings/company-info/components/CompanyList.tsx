@@ -17,12 +17,13 @@ export default function CompanyList() {
         id: ""
     })
     const { createById, isCreatingById } = useCompany()
-    const { data } = useCompanyList(search, currentPage - 1, 6, "created_at", "desc")
+    const { data, isLoading, isError } = useCompanyList(search, currentPage - 1, 6, "createdAt", "desc")
 
     const onSubmit = (value: any) => {
         setSearch(value.search)
         setCurrentPage(1)
     }
+
 
     const handleConfirm = () => {
         if(!isCreatingById) {
@@ -30,9 +31,13 @@ export default function CompanyList() {
                 onSuccess: (res) => {
                     toast.success(res.message ?? "Tạo công ty thành công!")
                 },
-                onError: (err) => {
-                    toast.error(err?.message  ?? "Tạo công ty thất bại!")
-                },
+                onSettled: () => {
+                    setConfirmationModal({
+                        open: false,
+                        name: "",
+                        id: ""
+                    })
+                }
             })
         }
     }
@@ -40,29 +45,30 @@ export default function CompanyList() {
     return (
         <div className="p-3 mb-3 border rounded-md">
             <h2 className="text-lg font-semibold mb-3">Danh sách công ty</h2>
-            <Form
-                className="w-full"
-                onFinish={onSubmit}
-            >
-                <Form.Item
-                    name="search"
-                >
-                    <div className="flex gap-2">
-                        <Input
-                            placeholder="Tìm kiếm tên công ty"
-                        />
-                        <button
-                            className="px-3 py-2 bg-primary text-white rounded-md whitespace-nowrap"
-                            type="submit"
+            {isLoading ? <div className="font-semibold w-full flex justify-center text-gray-600 py-16 text-xl">Loading...</div> : <></>}
+            {data?.result.companies.length == 0 || isError ? <div className="font-semibold w-full flex justify-center text-gray-600 py-16 text-xl">Không tìm thấy công ty.</div> : <></>}
+            {data?.result.companies.length != 0 && !isLoading && !isError ?
+                <>
+                    <Form
+                        className="w-full"
+                        onFinish={onSubmit}
+                    >
+                        <Form.Item
+                            name="search"
                         >
-                            Tìm kiếm
-                        </button>
-                    </div>
-                </Form.Item>
-            </Form>
-            {(data?.result.companies.length == 0) ? 
-                <div className="font-semibold w-full flex justify-center text-gray-600 py-16 text-xl">Không tìm thấy công ty.</div>
-                : <>
+                            <div className="flex gap-2">
+                                <Input
+                                    placeholder="Tìm kiếm tên công ty"
+                                />
+                                <button
+                                    className="px-3 py-2 bg-primary text-white rounded-md whitespace-nowrap"
+                                    type="submit"
+                                >
+                                    Tìm kiếm
+                                </button>
+                            </div>
+                        </Form.Item>
+                    </Form>
                     <div className="flex flex-wrap gap-3">
                         {data?.result.companies.map(item => 
                             <CompanyBox
@@ -77,7 +83,7 @@ export default function CompanyList() {
                         )}
                     </div>
                     <Pagination
-                        totalPages={5}
+                        totalPages={data?.result.totalPages as number}
                         currentPage={currentPage}
                         onPageChange={setCurrentPage}
                     />
@@ -92,7 +98,7 @@ export default function CompanyList() {
                         title="Xác nhận"
                         description={`Tạo thông tin công ty từ ${confirmationModal.name}`}
                     />
-                </>
+                </> : <></>
             }
         </div>
     )

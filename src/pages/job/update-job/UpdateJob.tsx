@@ -7,22 +7,62 @@ import { FORM_OF_WORK } from "../../../shared/constants/formOfWork"
 import { CITIES } from "../../../shared/constants/city"
 import QuillTextEditor from "../../../shared/components/quill/QuillTextEditor"
 import { Link, useParams } from "react-router-dom"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { getJobById, updateJob } from "../../../shared/apis/jobApi"
+import { toast } from "react-toastify"
+import { Job } from "../../../shared/types/job"
+import { cn } from "../../../shared/utils/cn"
+import { ApiResponse } from "../../../shared/types/apiResponse"
+import { useEffect } from "react"
 
 const UpdateJob = () => {
 
     const { jobId } = useParams()
+    const [form] = Form.useForm()
+    const queryClient = useQueryClient()
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["job", jobId],
+        queryFn: () => getJobById(jobId!),
+        enabled: !!jobId,
+        retry: 1,
+    })
+    const updateMutation = useMutation({
+        mutationFn: updateJob,
+        onSuccess: (data) => {
+            toast.success(data.message ?? "Cập nhật tin tuyển dụng thành công!")
+            queryClient.setQueryData<ApiResponse<Job>>(['job', jobId], data)
+            queryClient.invalidateQueries({
+                queryKey: ["my-jobs"]
+            })
+        },
+    })
 
-    const onSubmit = (values: any) => {
-        console.log(values)
+    useEffect(() => {
+        if(data?.result) {
+            form.setFieldsValue({
+                ...data.result,
+            })
+        }
+    }, [data])
+
+    const onSubmit = (values: Job) => {
+        const formData: Job = {
+            ...values,
+            id: jobId!
+        }
+        updateMutation.mutate(formData)
     }
 
     return (
         <Card className="m-4">
             <h1 className="font-semibold text-gray-800 text-3xl mb-5">Chỉnh sửa tin tuyển dụng</h1>
-            <Form
+            {isLoading && <p className="text-center text-2xl font-bold text-gray-500">Đang tải dữ liệu...</p>}
+            {isError && <p className="text-center text-2xl font-bold text-red-500">Có lỗi xảy ra, vui lòng thử lại sau!</p>}
+            {data?.result ? <Form
                 layout="vertical"
                 className="w-full"
                 onFinish={onSubmit}
+                scrollToFirstError
             >
                 <h1 className="text-xl  text-gray-800 mb-3">Thông tin việc làm</h1>
                 <Form.Item
@@ -298,9 +338,18 @@ const UpdateJob = () => {
                 </Form.Item>
                 <div className="w-full flex justify-end gap-3">
                     <Link to="/jobs" className="!bg-gray-200 !text-gray-800 font-medium px-5 py-1 rounded-md hover:!bg-gray-300 !transition-all">Hủy</Link>
-                    <button className="bg-primary text-white font-medium px-5 py-1 rounded-md">Lưu thay đổi</button>
+                    <button
+                        className={cn(
+                            "bg-primarytext-white font-medium px-5 py-1 rounded-md",
+                            updateMutation.isPending && "!opacity-50 !cursor-progress"
+                        )}
+                        type="submit"
+                        disabled={updateMutation.isPending}
+                    >
+                        {updateMutation.isPending ? "Đang lưu..." : "Lưu thay đổi"}
+                    </button>
                 </div>
-            </Form>
+            </Form> : <></>}
         </Card>
     )
 }

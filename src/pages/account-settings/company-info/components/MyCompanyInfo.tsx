@@ -1,5 +1,4 @@
 import { Avatar } from "antd";
-import LabelStatus from "../../../../shared/components/LabelStatus";
 import { Company } from "../../../../shared/types/company";
 import { FaPenToSquare } from "react-icons/fa6";
 import TrustedContent from "../../../../shared/components/trusted-content/TrustedContent";

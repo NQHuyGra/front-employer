@@ -23,8 +23,8 @@ const CompanyBox = ({company, className, onClick}: CompanyBoxProps) => {
                 alt={company.name}
                 className="size-16 rounded-md border object-cover"
             />
-            <div className="flex flex-col">
-                <h3 className="text-lg font-semibold line-clamp-1">{company.name}</h3>
+            <div className="flex flex-col items-start justify-center">
+                <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">{company.name}</h3>
                 <p className="text-sm text-gray-500 line-clamp-1">{company.email}</p>
             </div>
         </button>
