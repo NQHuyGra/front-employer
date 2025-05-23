@@ -12,6 +12,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addJob } from "../../../shared/apis/jobApi";
 import { toast } from "react-toastify";
 import { cn } from "../../../shared/utils/cn";
+import { SALARY } from "../../../shared/constants/salary";
+import { CATEGORIES } from "../../../shared/constants/category";
 
 export default function CreateJob() {
 
@@ -43,25 +45,25 @@ export default function CreateJob() {
                 scrollToFirstError
             >
                 <h1 className="text-xl  text-gray-800 mb-3">Thông tin việc làm</h1>
-                <Form.Item
-                    label={<p className=" text-gray-800">Tiêu đề tin tuyển dụng</p>}
-                    name="title"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Vui lòng nhập tiêu đề tin tuyển dụng!"
-                        }
-                    ]}
-                >
-                    <Input
-                        type="text"
-                        placeholder="VD: Tuyển dụng nhân viên kinh doanh"
-                    />
-                </Form.Item>
                 <div className="lg:flex gap-3 w-full">
                     <Form.Item
-                        label={<p className=" text-gray-800">Ngành nghề & Lĩnh vực</p>}
-                        name="job_field"
+                        label={<p className=" text-gray-800">Tiêu đề tin tuyển dụng</p>}
+                        name="title"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng nhập tiêu đề tin tuyển dụng!"
+                            }
+                        ]}
+                    >
+                        <Input
+                            type="text"
+                            placeholder="VD: Tuyển dụng nhân viên kinh doanh"
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        label={<p className=" text-gray-800">Ngành nghề</p>}
+                        name="category"
                         className="w-full"
                         rules={[
                             {
@@ -72,7 +74,31 @@ export default function CreateJob() {
                     >
                         <Select
                             showSearch
-                            placeholder="Chọn ngành nghề & lĩnh vực"
+                            placeholder="Ngành nghề"
+                            options={CATEGORIES.map(item => (
+                                {
+                                    value: item.id,
+                                    label: item.name
+                                }
+                            ))}
+                        />
+                    </Form.Item>
+                </div>
+                <div className="lg:flex gap-3 w-full">
+                    <Form.Item
+                        label={<p className=" text-gray-800">Lĩnh vực công việc</p>}
+                        name="job_field"
+                        className="w-full"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Vui lòng chọn lĩnh vực!"
+                            }
+                        ]}
+                    >
+                        <Select
+                            showSearch
+                            placeholder="Lĩnh vực công việc"
                             options={JOB_FIELDS.map(item => (
                                 {
                                     value: item.id,
@@ -187,11 +213,15 @@ export default function CreateJob() {
                             }
                         ]}
                     >
-                        <Input
-                            type="number"
-                            min={0}
-                            placeholder="Nhập mức lương"
-                            suffix="triệu"
+                        <Select
+                            showSearch
+                            placeholder="Mức lương"
+                            options={SALARY.map(item => (
+                                {
+                                    value: item.id,
+                                    label: item.name
+                                }
+                            ))}
                         />
                     </Form.Item>
                 </div>
@@ -276,12 +306,26 @@ export default function CreateJob() {
                     rules={[
                         {
                             required: true,
-                            message: "Vui lòng nhập qyền lợi ứng viên!"
+                            message: "Vui lòng nhập quyền lợi ứng viên!"
                         }
                     ]}
                 >
                     <QuillTextEditor
                         placeholder="Nội dung quyền lợi ứng viên"
+                    />
+                </Form.Item>
+                <Form.Item
+                    label={<p className=" text-gray-800">Thu nhập</p>}
+                    name="salary_details"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Vui lòng nhập thu nhập!"
+                        }
+                    ]}
+                >
+                    <QuillTextEditor
+                        placeholder="Nội dung thu nhập"
                     />
                 </Form.Item>
                 <Form.Item

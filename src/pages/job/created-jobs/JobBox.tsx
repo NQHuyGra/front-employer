@@ -34,18 +34,21 @@ const JobBox = ({ job, onStopPosting, onPosting, onDelete }: JobBoxProps) => {
                     <div className="flex gap-2">
                         <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white">{job.number_of_applicants} ứng viên</Link>
                         <Link to={`/update-job/${job.id}`} className="px-5 py-1 rounded-md bg-primary text-white">Chỉnh sửa</Link>
-                        <button
-                            className="px-5 py-1 rounded-md bg-amber-600 text-white"
-                            onClick={() => onStopPosting?.(job.id, job.title)}
-                        >
-                            Ngừng tuyển
-                        </button>
-                        <button
-                            className="px-5 py-1 rounded-md bg-amber-600 text-white"
-                            onClick={() => onPosting?.(job.id, job.title)}
-                        >
-                            Đăng tuyển
-                        </button>
+                        {job.enable ? (
+                            <button
+                                className="px-5 py-1 rounded-md bg-amber-600 text-white"
+                                onClick={() => onStopPosting?.(job.id, job.title)}
+                            >
+                                Ngừng tuyển
+                            </button>
+                        ) : (
+                            <button
+                                className="px-5 py-1 rounded-md bg-amber-600 text-white"
+                                onClick={() => onPosting?.(job.id, job.title)}
+                            >
+                                Đăng tuyển
+                            </button>
+                        )}
                         <button
                             className="px-5 py-1 rounded-md bg-red-600 text-white"
                             onClick={() => onDelete?.(job.id, job.title)}

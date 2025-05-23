@@ -6,6 +6,8 @@ export type Job = {
     location: string[];
     location_details: string;
     salary: number;
+    salary_details: string;
+    category: number;
     deadline: Date;
     exp: number;
     form_of_work: number;

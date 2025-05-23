@@ -3,27 +3,27 @@ import { Job } from "../types/job";
 import http from "../utils/http";
 
 export const addJob = async (job: Job) => {
-    const { data } = await http.post<ApiResponse<Job>>("/api/job/create", job);
+    const { data } = await http.post<ApiResponse<Job>>("/job/create", job);
     return data;
 }
 
 export const updateJob = async (job: Job) => {
-    const { data } = await http.put<ApiResponse<Job>>(`/api/job/update/${job.id}`, job);
+    const { data } = await http.put<ApiResponse<Job>>(`/job/update/${job.id}`, job);
     return data;
 }
 
 export const deleteJob = async (id: string) => {
-    const { data } = await http.delete<ApiResponse<boolean>>(`/api/job/delete/${id}`);
+    const { data } = await http.delete<ApiResponse<boolean>>(`/job/delete/${id}`);
     return data;
 }
 
 export const toggleEnableJob = async (id: string) => {
-    const { data } = await http.put<ApiResponse<Job>>(`/api/job/enable/${id}`);
+    const { data } = await http.put<ApiResponse<Job>>(`/job/enable/${id}`);
     return data;
 }
 
 export const getJobById = async (id: string) => {
-    const { data } = await http.get<ApiResponse<Job>>(`/api/job/without-company/${id}`);   
+    const { data } = await http.get<ApiResponse<Job>>(`/job/without-company/${id}`);   
     return data;
 }
 
@@ -44,7 +44,7 @@ export const getJobs = async (
     const [, params] = queryKey
     const { data } = await http.get<ApiResponse<Meta & {
         jobs: Job[]
-    }>>(`/api/job/my-jobs`, { params });
+    }>>(`/job/my-jobs`, { params });
     return data;
 }
 
