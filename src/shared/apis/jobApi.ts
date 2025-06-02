@@ -48,3 +48,8 @@ export const getJobs = async (
     return data;
 }
 
+export const allJobsApi = async () => {
+    const { data } = await http.get<ApiResponse<Job[]>>('/job/all-jobs')
+    return data
+}
+

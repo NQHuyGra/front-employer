@@ -23,9 +23,8 @@ export default function CreateJob() {
         mutationFn: addJob,
         onSuccess: (data) => {
             toast.success(data.message ?? "Tạo tin tuyển dụng thành công!")
-            queryClient.invalidateQueries({
-                queryKey: ["my-jobs"]
-            })
+            queryClient.invalidateQueries({queryKey: ["my-jobs"]})
+            queryClient.invalidateQueries({queryKey: ["all-jobs"]})
             navigate("/jobs")
         },
     })

@@ -34,9 +34,8 @@ const UpdateJob = () => {
         onSuccess: (data) => {
             toast.success(data.message ?? "Cập nhật tin tuyển dụng thành công!")
             queryClient.setQueryData<ApiResponse<Job>>(['job', jobId], data)
-            queryClient.invalidateQueries({
-                queryKey: ["my-jobs"]
-            })
+            queryClient.invalidateQueries({queryKey: ["my-jobs"]})
+            queryClient.invalidateQueries({queryKey: ["all-jobs"]})
         },
     })
 

@@ -7,6 +7,7 @@ type RejectModalProps = {
     onClose?: () => void
     onSubmit?: (reason: string) => void
     profile_name?: string
+    loading: boolean
 }
 
 const REASON = [
@@ -21,7 +22,8 @@ const RejectModal = ({
     open = false,
     onClose,
     onSubmit,
-    profile_name = ""
+    profile_name = "",
+    loading = false
 }: RejectModalProps) => {
 
     const [reason, setReason] = useState<string>("Hồ sơ chưa phù hợp")
@@ -41,6 +43,7 @@ const RejectModal = ({
             okButtonProps={{
                 className: "!bg-red-500 hover:!bg-red-600 text-white",
             }}
+            loading={loading}
         >
             <Form
                 layout="vertical"

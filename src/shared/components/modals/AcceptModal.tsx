@@ -5,13 +5,15 @@ type AcceptModalProps = {
     onClose?: () => void
     onSubmit?: () => void
     profile_name?: string
+    loading: boolean
 }
 
 const AcceptModal = ({
     open = false,
     onClose,
     onSubmit,
-    profile_name = ""
+    profile_name = "",
+    loading = false
 }: AcceptModalProps ) => {
 
     return (
@@ -25,6 +27,7 @@ const AcceptModal = ({
             okButtonProps={{
                 className: "!bg-green-500 hover:!bg-green-600 text-white",
             }}
+            loading={loading}
         >
         </Modal>
     )
