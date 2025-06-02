@@ -25,11 +25,11 @@ export default function RecruitmentStatistic() {
                         icon={IoMegaphoneOutline}
                     />
                 </Link>
-                <Link to="/cvs-management" className="min-w-64 flex-1">
+                <Link to="/applicants" className="min-w-64 flex-1">
                     <StatisticCard
                         className="w-full h-full transition-all text-green-600 bg-green-600/10 hover:bg-green-600/25"
                         value={0}
-                        title="CV tiếp nhận"
+                        title="Hồ sơ tiếp nhận"
                         icon={BsFileEarmarkText}
                     />
                 </Link>
@@ -41,11 +41,11 @@ export default function RecruitmentStatistic() {
                         icon={IoNewspaperOutline}
                     />
                 </Link>
-                <Link to="/cvs-management" className="min-w-64 flex-1">
+                <Link to="/applicants" className="min-w-64 flex-1">
                     <StatisticCard
                         className="w-full h-full transition-all text-red-600 bg-red-600/10 hover:bg-red-600/25"
                         value={0}
-                        title="CV ứng tuyển mới"
+                        title="Hồ sơ ứng tuyển mới"
                         icon={BsFileEarmarkPlus}
                     />
                 </Link>

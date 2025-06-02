@@ -32,7 +32,7 @@ const JobBox = ({ job, onStopPosting, onPosting, onDelete }: JobBoxProps) => {
                         {job.enable ? "Đang tuyển" : "Ngừng tuyển"}
                     </span>
                     <div className="flex gap-2">
-                        <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white">{job.number_of_applicants} ứng viên</Link>
+                        <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white">Xem ứng viên</Link>
                         <Link to={`/update-job/${job.id}`} className="px-5 py-1 rounded-md bg-primary text-white">Chỉnh sửa</Link>
                         {job.enable ? (
                             <button
