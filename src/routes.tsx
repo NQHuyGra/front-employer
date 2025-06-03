@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
             },
             {
                 id: "applicant-details",
-                path: "applicants/:profileId",
+                path: "profile/:profileId",
                 element: <ApplicantDetails/>,
             },
             {

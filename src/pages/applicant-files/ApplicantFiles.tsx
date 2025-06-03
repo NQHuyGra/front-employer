@@ -18,8 +18,8 @@ const CLOSE_VALUE = {
 
 export default function ApplicantFiles() {
 
-    
     const [searchParams, setSearchParams] = useSearchParams()
+    const [job, setJob] = useState(searchParams.get('job') || '')
     const [openReject, setOpenReject] = useState(CLOSE_VALUE)
     const [openAccept, setOpenAccept] = useState(CLOSE_VALUE)
     const [page, setPage] = useState(1)
@@ -31,9 +31,9 @@ export default function ApplicantFiles() {
     })
 
     const { data: applicantsData, isLoading, isError } = useQuery({
-        queryKey: ['applicants', searchParams, page],
+        queryKey: ['applicants', job, page],
         queryFn: () => getProfiles({
-            job: searchParams.get('job') || '',
+            job,
             page: page - 1,
             size: 6,
             direction: 'desc',
@@ -45,8 +45,10 @@ export default function ApplicantFiles() {
     const handleSelectChange = (value: string) => {
         if (value === "all") {
             searchParams.delete("job")
+            setJob('')
         } else {
             searchParams.set("job", value)
+            setJob(value)
         }
         setPage(1)
         setSearchParams(searchParams)
@@ -55,7 +57,7 @@ export default function ApplicantFiles() {
     const rejectMutation = useMutation({
         mutationFn: ({id, feedback} : {id: string, feedback: string}) => rejectApi(id, {feedback}),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['applicants', searchParams, page] })
+            queryClient.invalidateQueries({ queryKey: ['applicants', job, page] })
             setOpenReject(CLOSE_VALUE)
             toast.success(data.message ?? 'Cập nhật thành công!')
         },
@@ -64,7 +66,7 @@ export default function ApplicantFiles() {
     const acceptMutation = useMutation({
         mutationFn: (id: string) => confirmApi(id),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['applicants', searchParams, page] })
+            queryClient.invalidateQueries({ queryKey: ['applicants', job, page] })
             setOpenAccept(CLOSE_VALUE)
             toast.success(data.message ?? 'Cập nhật thành công!')
         }
@@ -90,7 +92,7 @@ export default function ApplicantFiles() {
                         className="w-full"
                         showSearch
                         placeholder="Chọn tin ứng tuyển"
-                        value={searchParams.get("job") || "all"}
+                        value={job || "all"}
                         onChange={handleSelectChange}
                         loading={jobLoading}
                         options={[
@@ -98,7 +100,7 @@ export default function ApplicantFiles() {
                             ...jobData?.result.map(item => ({
                                 value: item.id,
                                 label: item.title
-                            }))!
+                            })) ?? []
                         ]}
                     />
                 </div>
@@ -109,16 +111,16 @@ export default function ApplicantFiles() {
             {isError && <div className="flex flex-col items-center justify-center h-full text-2xl font-bold text-gray-700">
                 <p className="text-red-500">Có lỗi xảy ra, vui lòng thử lại sau!</p>
             </div>}
-            {applicantsData?.result.totalItems === 0 ? <Card className="m-4">
+            {(applicantsData?.result.totalItems === 0) ? <Card className="m-4">
                 <div className="flex flex-col items-center justify-center h-full text-2xl font-bold text-gray-700">
                     <p className="text-gray-500">Chưa tìm thấy ứng viên.</p>
                 </div>
             </Card> : <></>}
-            {applicantsData?.result.profiles.map(applicant => (
+            {applicantsData?.result?.profiles.map(applicant => (
                 <Card className="m-4">
                     <div className="group flex flex-col lg:flex-row lg:items-center gap-4 justify-between">
                         <div>
-                            <Link to={`/applicants/${applicant.profileResponse.id}`} className="font-medium text-gray-800 text-xl line-clamp-1 group-hover:underline group-hover:text-primary transition-all">{applicant.profileResponse.name}</Link>
+                            <Link to={`/profile/${applicant.profileResponse.id}`} className="font-medium text-gray-800 text-xl line-clamp-1 group-hover:underline group-hover:text-primary transition-all">{applicant.profileResponse.name}</Link>
                             <table className="w-full">
                                 <tbody>
                                     <tr>
@@ -140,7 +142,8 @@ export default function ApplicantFiles() {
                                 </tbody>
                             </table>
                         </div> 
-                        <div className="flex w-max me-0">
+                        <div className="flex w-max me-0 items-center">
+                            <p className="text-sm text-gray-500 mr-3">{applicant.recruitmentDetailsResponse.viewed ? 'Đã xem' : 'Chưa xem'}</p>
                             {applicant.recruitmentDetailsResponse.status === 0 && 
                                 <div className="flex gap-2">
                                     <button
@@ -173,7 +176,7 @@ export default function ApplicantFiles() {
             ))}
             <Pagination
                 currentPage={page}
-                totalPages={applicantsData?.result.totalPages!}
+                totalPages={applicantsData?.result?.totalPages || 0}
                 onPageChange={setPage}
             />
             <RejectModal
@@ -194,33 +197,3 @@ export default function ApplicantFiles() {
 
     )
 }
-
-const APPLICANTS = [
-    {
-        id: "1",
-        name: "JAVA_INTERN",
-        position: "Thực tập sinh Java",
-        fullname: "Nguyễn Văn A",
-        email: "nguyenvana123@gmail.com",
-        phone_number: "0123456789",
-        status: 0,
-    },
-    {
-        id: "2",
-        name: "JAVA",
-        position: "Thực tập sinh Java",
-        fullname: "Nguyễn Văn B",
-        email: "nguyenvanb3@gmail.com",
-        phone_number: "0123456789",
-        status: 1,
-    },
-    {
-        id: "2",
-        name: "JAVA",
-        position: "Thực tập sinh Java",
-        fullname: "Nguyễn Văn B",
-        email: "nguyenvanb3@gmail.com",
-        phone_number: "0123456789",
-        status: 2,
-    },
-]

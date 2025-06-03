@@ -26,24 +26,24 @@ const JobBox = ({ job, onStopPosting, onPosting, onDelete }: JobBoxProps) => {
                 </div>
                 <div className="flex gap-3 flex-col lg:flex-row lg:items-center justify-between w-full lg:w-auto">
                     <span className={cn(
-                        "",
+                        "whitespace-nowrap",
                         job.enable ? "text-green-600" : "text-red-600",
                     )}>
                         {job.enable ? "Đang tuyển" : "Ngừng tuyển"}
                     </span>
                     <div className="flex gap-2">
-                        <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white">Xem ứng viên</Link>
-                        <Link to={`/update-job/${job.id}`} className="px-5 py-1 rounded-md bg-primary text-white">Chỉnh sửa</Link>
+                        <Link to={`/applicants?job=${job.id}`} className="px-5 py-1 rounded-md bg-sky-600 text-white whitespace-nowrap">Xem ứng viên</Link>
+                        <Link to={`/update-job/${job.id}`} className="px-5 py-1 rounded-md bg-primary text-white whitespace-nowrap">Chỉnh sửa</Link>
                         {job.enable ? (
                             <button
-                                className="px-5 py-1 rounded-md bg-amber-600 text-white"
+                                className="px-5 py-1 rounded-md bg-amber-600 text-white whitespace-nowrap"
                                 onClick={() => onStopPosting?.(job.id, job.title)}
                             >
                                 Ngừng tuyển
                             </button>
                         ) : (
                             <button
-                                className="px-5 py-1 rounded-md bg-amber-600 text-white"
+                                className="px-5 py-1 rounded-md bg-amber-600 text-white whitespace-nowrap"
                                 onClick={() => onPosting?.(job.id, job.title)}
                             >
                                 Đăng tuyển

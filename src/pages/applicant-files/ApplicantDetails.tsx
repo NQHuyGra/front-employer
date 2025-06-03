@@ -1,19 +1,34 @@
 import { useParams } from "react-router-dom"
 import Card from "../../shared/components/cards/Card"
 import TrustedContent from "../../shared/components/trusted-content/TrustedContent"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { getProfile } from "../../shared/apis/profileApi"
 import dayjs from "dayjs"
+import { viewApi } from "../../shared/apis/applicantApi"
+import { useEffect } from "react"
 
 const ApplicantDetails = () => {
 
     const { profileId } = useParams()
+    const queryClient = useQueryClient()
     const { data, isLoading, isError } = useQuery({
         queryKey: ['profile', profileId],
         queryFn: () => getProfile(profileId!),
         enabled: !!profileId,
         retry: 0
     })
+
+    const viewMutation = useMutation({
+        mutationFn: viewApi,
+        onSuccess: (data) => {
+            if(data.result) queryClient.invalidateQueries({queryKey: ['applicants']})
+        }
+    })
+
+    useEffect(() => {
+        if(profileId)
+            viewMutation.mutate(profileId)
+    }, [profileId])
 
     return (
         <Card className="m-4">

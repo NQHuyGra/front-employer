@@ -48,6 +48,7 @@ export default function CreateJob() {
                     <Form.Item
                         label={<p className=" text-gray-800">Tiêu đề tin tuyển dụng</p>}
                         name="title"
+                        className="w-full"
                         rules={[
                             {
                                 required: true,
