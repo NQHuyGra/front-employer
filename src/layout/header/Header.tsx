@@ -22,7 +22,7 @@ export default function Header() {
                 <button className="text-2xl" onClick={toggle} aria-label="Open sidebar">
                     {isOpen ? <FaXmark/> : <FaBars/> }
                 </button>
-                <Link to="/" className="text-3xl font-semibold">Logo</Link>
+                <Link to="/" className="text-3xl font-semibold">ViecMoi</Link>
             </div>
             <div className="flex items-center gap-4">
                 <Link to="/create-job" className={cn(button, 'hidden md:flex px-4')}>
